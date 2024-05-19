@@ -1,0 +1,9 @@
+Werkzeug==3.0.0
+Flask==2.3.2
+flask-sqlalchemy==3.1.1
+SQLAlchemy==2.0.25
+python-dotenv==1.0.1
+flask-jwt-extended==4.6.0
+requests==2.31.0
+flask-marshmallow==1.2.1
+marshmallow-sqlalchemy==1.0.0

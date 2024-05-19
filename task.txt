@@ -1,0 +1,32 @@
+Create a system for managing information about Pokemon that allows users to browse data about Pokemon obtained from the
+PokeAPI. The application should support user authentication and authorization and provide an API for browsing Pokemon data.
+
+Technical Requirements:
+1. User Authentication:
+   - Implement a system for user registration and login.
+   - Use JWT tokens for user authentication.
+
+2. User Authorization:
+   - Define user roles, e.g., admin and standard user.
+   - Access to browse Pokemon data should be available to all users, while adding, deleting, and editing data should be
+   restricted to administrators.
+
+3. Integration with PokeAPI:
+   - Utilize PokeAPI to retrieve data about Pokemon, such as name, type, abilities, etc.
+   - Provide a caching mechanism for data to avoid excessive server load.
+
+4. API:
+   - Provide a RESTful API for browsing Pokemon data.
+   - Access to the API should be secured with JWT tokens, with certain operations available only to administrators.
+
+Additional Requirements:
+- Implement a password reset mechanism for users.
+- Handle exceptions and HTTP responses in case of errors.
+- Optionally, create a simple user interface for browsing Pokemon data.
+
+Notes:
+Students should use the Flask framework to implement all the functionalities mentioned above, such as handling HTTP
+requests, authentication, authorization, integration with PokeAPI, and providing API endpoints. They can also use
+appropriate libraries such as Flask-RESTful for creating the API interface and Flask-JWT-Extended for handling JWT tokens.
+Additionally, students should ensure the security of the application by properly handling authentication and authorization
+and avoiding security vulnerabilities such as SQL Injection and Cross-Site Scripting (XSS).
