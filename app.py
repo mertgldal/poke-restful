@@ -1,13 +1,11 @@
 from flask import Flask, request, abort, jsonify
-from flask_jwt_extended import get_jwt, create_access_token, jwt_required, JWTManager, current_user
+from flask_jwt_extended import create_access_token, jwt_required, JWTManager, current_user
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase
-from sqlalchemy import Integer, String, ForeignKey, Float, Identity
 from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 import requests
-from dataclasses import dataclass
 from flask_marshmallow import Marshmallow
 
 app = Flask(__name__)
@@ -60,7 +58,6 @@ class UserSchema(ma.SQLAlchemyAutoSchema):
 class PokemonSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Pokemon
-        exclude = ['id']
 
 
 with app.app_context():
@@ -70,7 +67,7 @@ with app.app_context():
 def is_user_admin(func):
     @wraps(func)
     def wrapped(*args, **kwargs):
-        if current_user.get_id() == "1":
+        if current_user.id == 2:
             return func(*args, **kwargs)
         return abort(403)
 
@@ -85,6 +82,24 @@ def is_user_authenticated(func):
         return func(*args, **kwargs)
 
     return wrapped
+
+
+def get_pokemon_data(data):
+    pokemon_id = data.get("pokemon_id", None)
+    pokemon_name = data.get("name", None)
+    ability_list = [ability["ability"]["name"].title() for ability in data["abilities"]]
+    type_list = [poke_type["type"]["name"].title() for poke_type in data["types"]]
+    poke_data_dict = {
+        "result":
+            {
+                "id": pokemon_id,
+                "name": pokemon_name,
+                "abilities": ability_list,
+                "types": type_list,
+                "poke_img": f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon_id}.png"
+            }
+    }
+    return poke_data_dict
 
 
 @jwt.user_identity_loader
@@ -103,6 +118,19 @@ def home():
     return jsonify({'message': 'Welcome to Pokemon API!'})
 
 
+@app.route('/who-am-i', methods=["GET"])
+@jwt_required()
+def who_am_i():
+    user_details = {
+        "current_user": {
+            "id": current_user.id,
+            "name": current_user.name,
+            "email": current_user.email
+        }
+    }
+    return jsonify(user_details)
+
+
 @app.route('/get-all-pokemon')
 def get_all_pokemon():
     pokemon_data = Pokemon.query.all()
@@ -111,6 +139,8 @@ def get_all_pokemon():
 
 
 @app.route('/get-all-users')
+@jwt_required()
+@is_user_admin
 def get_all_users():
     user_data = User.query.all()
     schema = UserSchema(many=True)
@@ -177,65 +207,70 @@ def change_password():
 #     return redirect(url_for('home'))
 #
 #
-# @app.route('/search', methods=['GET', 'POST'])
-# @login_required
-# @is_user_admin
-# def search():
-#     form = SearchForm()
-#     pokemon_id = request.args.get('pokemon_id', None)
-#     if form.validate_on_submit():
-#         pokemon_name = form.title.data
-#         result = requests.get(f'{POKE_API}/{pokemon_name.lower()}?limit=100&offset=0')
-#         data = result.json()
-#         print(data["name"])
-#         return render_template("pokemon_details.html", pokemon=data)
-#     elif pokemon_id:
-#         pokemon_name = request.args.get('pokemon_name', None)
-#         ability = request.args.get('pokemon_abilities', None)
-#         types = request.args.get('pokemon_types', None)
-#         poke_img = f"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/{pokemon_id}.png"
-#         pokemon = Pokemon(
-#             id=pokemon_id,
-#             name=pokemon_name,
-#             creator=current_user,
-#             abilities=ability,
-#             rating=0,
-#             types=types,
-#             image=poke_img,
-#         )
-#         db.session.add(pokemon)
-#         db.session.commit()
-#         return redirect(url_for("edit", pokemon_id=pokemon_id))
-#     else:
-#         return render_template("search_page.html", form=form)
-#
-#
-# @app.route('/edit-pokemon/<int:pokemon_id>', methods=["GET", "POST"])
-# @login_required
-# @is_user_admin
-# def edit(pokemon_id):
-#     edit_form = EditForm()
-#     if edit_form.validate_on_submit():
-#         db.session.query(Pokemon).filter(Pokemon.id == pokemon_id).update(
-#             {
-#                 'rating': edit_form.rating.data
-#             }
-#         )
-#         db.session.commit()
-#         return redirect(url_for('home'))
-#     else:
-#         return render_template("edit.html", form=edit_form)
-#
-#
-# @app.route('/delete/<int:pokemon_id>', methods=["GET", "POST"])
-# @login_required
-# @is_user_admin
-# def delete(pokemon_id):
-#     pokemon = db.get_or_404(entity=Pokemon, ident=pokemon_id)
-#     db.session.delete(pokemon)
-#     db.session.commit()
-#     return redirect(url_for('home'))
+@app.route('/search', methods=['GET'])
+@jwt_required()
+def search():
+    pokemon_name = request.args.get("pokemon_name", None)
+
+    try:
+        result = requests.get(f'{POKE_API}/{pokemon_name.lower()}?limit=100&offset=0')
+        data = result.json()
+        poke_data = get_pokemon_data(data)
+
+    except requests.exceptions.RequestException:
+        return jsonify({"error": f"There is no pokemon named {pokemon_name}"}), 400
+
+    return jsonify(poke_data)
+
+
+@app.route('/add/<string:pokemon_name>', methods=['POST'])
+@jwt_required()
+@is_user_admin
+def add(pokemon_name):
+    result = requests.get(f'{POKE_API}/{pokemon_name.lower()}?limit=100&offset=0')
+    data = result.json()
+    poke_data = get_pokemon_data(data)
+    print(poke_data)
+    print(poke_data['result']['name'], ", ".join(poke_data['result']['abilities']),
+          ", ".join(poke_data['result']['types']), poke_data['result']['poke_img'])
+    print(current_user.name)
+    pokemon = Pokemon(
+        name=poke_data['result']['name'],
+        creator=current_user,
+        abilities=", ".join(poke_data['result']['abilities']),
+        rating=0,
+        types=", ".join(poke_data['result']['types']),
+        image=poke_data['result']['poke_img'],
+    )
+
+    db.session.add(pokemon)
+    db.session.commit()
+
+    return jsonify({'Success': 'Pokemon added successfully!'})
+
+
+@app.route('/edit-pokemon/<int:pokemon_id>', methods=["POST"])
+@jwt_required()
+@is_user_admin
+def edit(pokemon_id):
+    db.session.query(Pokemon).filter(Pokemon.id == pokemon_id).update(
+        {
+            'rating': float(request.args.get('rating', 0.0))
+        }
+    )
+    db.session.commit()
+    return jsonify({"Success": "Pokemon edited successfully!"})
+
+
+@app.route('/delete/<int:pokemon_id>', methods=["GET", "POST"])
+@jwt_required()
+@is_user_admin
+def delete(pokemon_id):
+    pokemon = db.get_or_404(entity=Pokemon, ident=pokemon_id)
+    db.session.delete(pokemon)
+    db.session.commit()
+    return jsonify({"Success": "Pokemon deleted successfully!"})
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)
