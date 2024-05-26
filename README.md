@@ -2,14 +2,23 @@
 
 This repository contains a Flask-based RESTful API for managing Pokémon data. With this API, users can register, login, and perform various operations related to Pokémon, such as retrieving information about specific Pokémon, registering new Pokémon, and managing user accounts.
 
-## Features:
+## Features
 
-- **User Authentication:** Users can register and login securely using email and password authentication.
-- **Token-based Authentication:** JWT (JSON Web Tokens) are used for secure authentication and authorization of users.
-- **Pokémon Management:** Users can retrieve information about Pokémon, including their abilities, types, and images. They can also register new Pokémon to the database.
-- **User Management:** Admin functionality is included for managing user accounts.
+- **User Authentication:**
+  - Secure user registration and login using email and password.
+  - JWT (JSON Web Tokens) for authentication and authorization.
 
-## Technologies Used:
+- **Pokémon Management:**
+  - Retrieve information about Pokémon, including abilities, types, and images.
+  - Admin users can register new Pokémon, edit their ratings, and delete Pokémon from the database.
+
+- **User Management:**
+  - Admin functionality for managing user accounts, including viewing all users.
+
+- **Token Management:**
+  - Secure token handling, including token revocation and blocking.
+
+## Technologies Used
 
 - **Flask:** A lightweight web application framework for Python.
 - **Flask-JWT-Extended:** Extension for Flask that adds JWT support to applications.
@@ -17,12 +26,97 @@ This repository contains a Flask-based RESTful API for managing Pokémon data. W
 - **Marshmallow:** A Python library for object serialization and deserialization.
 - **SQLite:** A lightweight relational database management system used for storing Pokémon and user data.
 
-## Usage:
+## Setup Instructions
 
-1. Clone the repository to your local machine.
-2. Install the required dependencies listed in `requirements.txt`.
-3. Set up a virtual environment (recommended).
-4. Run the Flask application using `python app.py`.
-5. Access the API endpoints using a tool like Postman or by making HTTP requests.
+### Prerequisites
 
-Feel free to contribute to this project by submitting pull requests or reporting issues!
+Ensure you have Python and pip installed on your system.
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-username/pokemon-api.git
+   cd pokemon-api
+   ```
+
+2. **Create a virtual environment (recommended):**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up the database:**
+   ```bash
+   flask db upgrade
+   ```
+
+### Running the Application
+
+1. **Run the Flask application:**
+   ```bash
+   python app.py
+   ```
+
+2. **Access the API:**
+   Open your browser or API testing tool (e.g., Postman) and navigate to `http://127.0.0.1:5000`.
+
+## API Endpoints
+
+### User Endpoints
+
+- **Register:**
+  - `POST /register`
+  - Request Body: `{ "name": "your_name", "email": "your_email", "password": "your_password" }`
+
+- **Login:**
+  - `POST /login`
+  - Request Body: `{ "email": "your_email", "password": "your_password" }`
+
+- **Change Password:**
+  - `POST /change-password`
+  - Request Body: `{ "current_password": "your_current_password", "new_password": "your_new_password" }`
+
+- **Logout:**
+  - `DELETE /logout`
+
+### Pokémon Endpoints
+
+- **Get All Pokémon:**
+  - `GET /get-all-pokemon`
+
+- **Get Pokémon by ID:**
+  - `GET /pokemon/<int:pokemon_id>`
+
+- **Search Pokémon:**
+  - `GET /search`
+  - Query Parameter: `pokemon_name`
+
+- **Add Pokémon (Admin only):**
+  - `POST /add/<string:pokemon_name>`
+
+- **Edit Pokémon (Admin only):**
+  - `POST /edit-pokemon/<int:pokemon_id>`
+  - Query Parameter: `rating`
+
+- **Delete Pokémon (Admin only):**
+  - `GET or POST /delete/<int:pokemon_id>`
+
+### Admin Endpoints
+
+- **Get All Users (Admin only):**
+  - `GET /get-all-users`
+
+### Miscellaneous Endpoints
+
+- **Who Am I:**
+  - `GET /who-am-i`
+
+## Contribution
+
+Contributions are welcome! Feel free to submit pull requests or report issues.
