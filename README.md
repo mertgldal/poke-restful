@@ -1,6 +1,9 @@
+Sure, here is an updated `README.md` reflecting the new structure of the project:
+
+```markdown
 # Flask Pokémon API
 
-This repository contains a Flask-based RESTful API for managing Pokémon data. With this API, users can register, login, and perform various operations related to Pokémon, such as retrieving information about specific Pokémon, registering new Pokémon, and managing user accounts.
+This repository contains a Flask-based RESTful API for managing Pokémon data. With this API, users can register, log in, and perform various operations related to Pokémon, such as retrieving information about specific Pokémon, registering new Pokémon, and managing user accounts.
 
 ## Features
 
@@ -26,6 +29,27 @@ This repository contains a Flask-based RESTful API for managing Pokémon data. W
 - **Marshmallow:** A Python library for object serialization and deserialization.
 - **SQLite:** A lightweight relational database management system used for storing Pokémon and user data.
 
+## Project Structure
+
+```
+flask_pokemon_api/
+├── app/
+│   ├── __init__.py
+│   ├── extensions.py
+│   ├── jwt_callbacks.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   └── user.py
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── auth.py
+│   │   └── pokemon.py
+├── config.py
+├── run.py
+├── .venv/
+└── README.md
+```
+
 ## Setup Instructions
 
 ### Prerequisites
@@ -42,8 +66,8 @@ Ensure you have Python and pip installed on your system.
 
 2. **Create a virtual environment (recommended):**
    ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
    ```
 
 3. **Install dependencies:**
@@ -60,7 +84,7 @@ Ensure you have Python and pip installed on your system.
 
 1. **Run the Flask application:**
    ```bash
-   python app.py
+   python run.py
    ```
 
 2. **Access the API:**
@@ -77,14 +101,16 @@ Ensure you have Python and pip installed on your system.
 - **Login:**
   - `POST /login`
   - Request Body: `{ "email": "your_email", "password": "your_password" }`
+  - returns access_token
 
 - **Change Password:**
   - `POST /change-password`
   - Request Body: `{ "current_password": "your_current_password", "new_password": "your_new_password" }`
+  - requests access_token
 
 - **Logout:**
   - `DELETE /logout`
-
+  - requests access_token
 ### Pokémon Endpoints
 
 - **Get All Pokémon:**
@@ -93,7 +119,7 @@ Ensure you have Python and pip installed on your system.
 - **Get Pokémon by ID:**
   - `GET /pokemon/<int:pokemon_id>`
 
-- **Search Pokémon:**
+- **Search Pokémon():**
   - `GET /search`
   - Query Parameter: `pokemon_name`
 
