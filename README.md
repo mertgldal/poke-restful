@@ -1,6 +1,4 @@
-Sure, here is an updated `README.md` reflecting the new structure of the project:
-
-```markdown
+```
 # Flask Pokémon API
 
 This repository contains a Flask-based RESTful API for managing Pokémon data. With this API, users can register, log in, and perform various operations related to Pokémon, such as retrieving information about specific Pokémon, registering new Pokémon, and managing user accounts.
