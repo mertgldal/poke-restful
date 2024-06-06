@@ -1,4 +1,4 @@
-```
+```markdown
 # Flask Pokémon API
 
 This repository contains a Flask-based RESTful API for managing Pokémon data. With this API, users can register, log in, and perform various operations related to Pokémon, such as retrieving information about specific Pokémon, registering new Pokémon, and managing user accounts.
@@ -99,16 +99,14 @@ Ensure you have Python and pip installed on your system.
 - **Login:**
   - `POST /login`
   - Request Body: `{ "email": "your_email", "password": "your_password" }`
-  - returns access_token
 
 - **Change Password:**
   - `POST /change-password`
   - Request Body: `{ "current_password": "your_current_password", "new_password": "your_new_password" }`
-  - requests access_token
 
 - **Logout:**
   - `DELETE /logout`
-  - requests access_token
+
 ### Pokémon Endpoints
 
 - **Get All Pokémon:**
@@ -117,7 +115,7 @@ Ensure you have Python and pip installed on your system.
 - **Get Pokémon by ID:**
   - `GET /pokemon/<int:pokemon_id>`
 
-- **Search Pokémon():**
+- **Search Pokémon:**
   - `GET /search`
   - Query Parameter: `pokemon_name`
 
@@ -144,3 +142,4 @@ Ensure you have Python and pip installed on your system.
 ## Contribution
 
 Contributions are welcome! Feel free to submit pull requests or report issues.
+```
