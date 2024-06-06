@@ -1,94 +1,68 @@
-Sure, here is an updated `README.md` reflecting the new structure of the project:
-
-```markdown
 # Flask Pokémon API
 
-This repository contains a Flask-based RESTful API for managing Pokémon data. With this API, users can register, log in, and perform various operations related to Pokémon, such as retrieving information about specific Pokémon, registering new Pokémon, and managing user accounts.
+This project is a Flask-based RESTful API for managing Pokémon data. It features user authentication, CRUD operations for Pokémon, secure token handling, and admin functionalities.
 
 ## Features
 
-- **User Authentication:**
-  - Secure user registration and login using email and password.
-  - JWT (JSON Web Tokens) for authentication and authorization.
+### User Authentication
+- Secure user registration and login using email and password.
+- JWT (JSON Web Tokens) for authentication and authorization.
 
-- **Pokémon Management:**
-  - Retrieve information about Pokémon, including abilities, types, and images.
-  - Admin users can register new Pokémon, edit their ratings, and delete Pokémon from the database.
+### Pokémon Management
+- Retrieve information about Pokémon, including abilities, types, and images.
+- Admin users can register new Pokémon, edit their ratings, and delete Pokémon from the database.
 
-- **User Management:**
-  - Admin functionality for managing user accounts, including viewing all users.
+### User Management
+- Admin functionality for managing user accounts, including viewing all users.
 
-- **Token Management:**
-  - Secure token handling, including token revocation and blocking.
+### Token Management
+- Secure token handling, including token revocation and blocking.
 
 ## Technologies Used
 
-- **Flask:** A lightweight web application framework for Python.
-- **Flask-JWT-Extended:** Extension for Flask that adds JWT support to applications.
-- **Flask-SQLAlchemy:** Flask extension for working with SQLAlchemy, a popular SQL toolkit and Object-Relational Mapping (ORM) library for Python.
-- **Marshmallow:** A Python library for object serialization and deserialization.
-- **SQLite:** A lightweight relational database management system used for storing Pokémon and user data.
+- **Backend:** Python, Flask, SQLAlchemy
+- **Serialization:** Marshmallow
+- **Authentication:** Flask-JWT-Extended
+- **Database:** SQLite
 
-## Project Structure
-
-```
-flask_pokemon_api/
-├── app/
-│   ├── __init__.py
-│   ├── extensions.py
-│   ├── jwt_callbacks.py
-│   ├── models/
-│   │   ├── __init__.py
-│   │   └── user.py
-│   ├── routes/
-│   │   ├── __init__.py
-│   │   ├── auth.py
-│   │   └── pokemon.py
-├── config.py
-├── run.py
-├── .venv/
-└── README.md
-```
-
-## Setup Instructions
-
-### Prerequisites
-
-Ensure you have Python and pip installed on your system.
-
-### Installation
+## Installation
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/your-username/pokemon-api.git
+   git clone https://github.com/yourusername/pokemon-api.git
    cd pokemon-api
    ```
 
-2. **Create a virtual environment (recommended):**
+2. **Create and activate a virtual environment:**
    ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
    ```
 
-3. **Install dependencies:**
+3. **Install the dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-4. **Set up the database:**
+4. **Set up environment variables:**
+   Create a `.env` file in the root directory of the project and add your environment variables:
+   ```
+   SECRET_KEY=your_secret_key
+   SQLALCHEMY_DATABASE_URI=sqlite:///database.db
+   ```
+
+5. **Initialize the database:**
    ```bash
    flask db upgrade
    ```
 
-### Running the Application
+## Running the Application
 
 1. **Run the Flask application:**
    ```bash
-   python run.py
+   flask run
    ```
-
-2. **Access the API:**
-   Open your browser or API testing tool (e.g., Postman) and navigate to `http://127.0.0.1:5000`.
+   Access the application in your web browser at `http://localhost:5000`.
 
 ## API Endpoints
 
@@ -101,16 +75,14 @@ Ensure you have Python and pip installed on your system.
 - **Login:**
   - `POST /login`
   - Request Body: `{ "email": "your_email", "password": "your_password" }`
-  - returns access_token
 
 - **Change Password:**
   - `POST /change-password`
   - Request Body: `{ "current_password": "your_current_password", "new_password": "your_new_password" }`
-  - requests access_token
 
 - **Logout:**
   - `DELETE /logout`
-  - requests access_token
+
 ### Pokémon Endpoints
 
 - **Get All Pokémon:**
@@ -119,7 +91,7 @@ Ensure you have Python and pip installed on your system.
 - **Get Pokémon by ID:**
   - `GET /pokemon/<int:pokemon_id>`
 
-- **Search Pokémon():**
+- **Search Pokémon:**
   - `GET /search`
   - Query Parameter: `pokemon_name`
 
@@ -131,7 +103,7 @@ Ensure you have Python and pip installed on your system.
   - Query Parameter: `rating`
 
 - **Delete Pokémon (Admin only):**
-  - `GET or POST /delete/<int:pokemon_id>`
+  - `DELETE /delete/<int:pokemon_id>`
 
 ### Admin Endpoints
 
