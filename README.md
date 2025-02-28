@@ -25,44 +25,6 @@ This project is a Flask-based RESTful API for managing Pokémon data. It feature
 - **Authentication:** Flask-JWT-Extended
 - **Database:** SQLite
 
-## Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/yourusername/pokemon-api.git
-   cd pokemon-api
-   ```
-
-2. **Create and activate a virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
-
-3. **Install the dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up environment variables:**
-   Create a `.env` file in the root directory of the project and add your environment variables:
-   ```
-   SECRET_KEY=your_secret_key
-   SQLALCHEMY_DATABASE_URI=sqlite:///database.db
-   ```
-
-5. **Initialize the database:**
-   ```bash
-   flask db upgrade
-   ```
-
-## Running the Application
-
-1. **Run the Flask application:**
-   ```bash
-   flask run
-   ```
-   Access the application in your web browser at `http://localhost:5000`.
 
 ## API Endpoints
 
